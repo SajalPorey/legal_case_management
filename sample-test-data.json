@@ -1,0 +1,42 @@
+{
+  "users": [
+    {
+      "name": "Admin User",
+      "email": "admin@legalcms.com",
+      "password": "Password@123",
+      "role": "Admin"
+    },
+    {
+      "name": "Ava Counsel",
+      "email": "lawyer@legalcms.com",
+      "password": "Password@123",
+      "role": "Lawyer"
+    }
+  ],
+  "clients": [
+    {
+      "name": "John Carter",
+      "email": "john@example.com",
+      "phone": "555-1200",
+      "address": "17 Oak Street, New Delhi"
+    },
+    {
+      "name": "Meera Sharma",
+      "email": "meera@example.com",
+      "phone": "555-9088",
+      "address": "44 Green Avenue, Mumbai"
+    }
+  ],
+  "cases": [
+    {
+      "title": "Acquisition Compliance Review",
+      "type": "Corporate",
+      "status": "In Progress"
+    },
+    {
+      "title": "Custody Hearing Preparation",
+      "type": "Family",
+      "status": "Hearing Scheduled"
+    }
+  ]
+}
