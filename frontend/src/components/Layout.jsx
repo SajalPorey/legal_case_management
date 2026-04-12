@@ -36,6 +36,14 @@ const Layout = () => {
               {link.label}
             </NavLink>
           ))}
+          {user?.role === "Admin" && (
+            <NavLink
+              to="/admin-requests"
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
+              Admin Requests
+            </NavLink>
+          )}
         </nav>
         <div className="sidebar-footer">
           <div>

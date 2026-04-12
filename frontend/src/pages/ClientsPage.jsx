@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../api/client";
+import { useAuth } from "../context/AuthContext";
 
 const emptyForm = {
   name: "",
@@ -10,6 +11,7 @@ const emptyForm = {
 };
 
 const ClientsPage = () => {
+  const { user } = useAuth();
   const [clients, setClients] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [search, setSearch] = useState("");
@@ -166,9 +168,11 @@ const ClientsPage = () => {
                         <button className="text-button" onClick={() => handleEdit(client)}>
                           Edit
                         </button>
-                        <button className="text-button danger" onClick={() => handleDelete(client._id)}>
-                          Delete
-                        </button>
+                        {user?.role === "Admin" && (
+                          <button className="text-button danger" onClick={() => handleDelete(client._id)}>
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))

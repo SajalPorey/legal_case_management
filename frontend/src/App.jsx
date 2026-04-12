@@ -9,6 +9,7 @@ import CasesPage from "./pages/CasesPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import HearingsPage from "./pages/HearingsPage";
 import TimelinePage from "./pages/TimelinePage";
+import AdminRequestsPage from "./pages/AdminRequestsPage";
 
 const App = () => (
   <Routes>
@@ -29,6 +30,7 @@ const App = () => (
       <Route path="documents" element={<DocumentsPage />} />
       <Route path="hearings" element={<HearingsPage />} />
       <Route path="timeline" element={<TimelinePage />} />
+      <Route path="admin-requests" element={<AdminRequestsPage />} />
     </Route>
   </Routes>
 );

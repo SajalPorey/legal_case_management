@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../api/client";
+import { useAuth } from "../context/AuthContext";
 
 const DocumentsPage = () => {
+  const { user } = useAuth();
   const [documents, setDocuments] = useState([]);
   const [cases, setCases] = useState([]);
   const [caseId, setCaseId] = useState("");
@@ -144,9 +146,11 @@ const DocumentsPage = () => {
                         >
                           Open
                         </a>
-                        <button className="text-button danger" onClick={() => handleDelete(document._id)}>
-                          Delete
-                        </button>
+                        {user?.role === "Admin" && (
+                          <button className="text-button danger" onClick={() => handleDelete(document._id)}>
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))

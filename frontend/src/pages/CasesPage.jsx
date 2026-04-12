@@ -8,6 +8,7 @@ const emptyForm = {
   type: "",
   description: "",
   status: "Open",
+  assignedLawyer: "",
 };
 
 const statuses = ["Open", "In Progress", "Hearing Scheduled", "Closed"];
@@ -16,6 +17,7 @@ const CasesPage = () => {
   const { user } = useAuth();
   const [cases, setCases] = useState([]);
   const [clients, setClients] = useState([]);
+  const [lawyers, setLawyers] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -43,9 +45,21 @@ const CasesPage = () => {
     }
   };
 
+  const fetchLawyers = async () => {
+    if (user?.role === "Admin") {
+      try {
+        const { data } = await api.get("/auth");
+        setLawyers(data.filter((u) => u.role === "Lawyer"));
+      } catch (err) {
+        console.error("Unable to load lawyers", err);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchClients();
-  }, []);
+    fetchLawyers();
+  }, [user]);
 
   useEffect(() => {
     fetchCases();
@@ -61,8 +75,11 @@ const CasesPage = () => {
 
     const payload = {
       ...form,
-      assignedLawyer: user?.id,
     };
+
+    if (user?.role !== "Admin") {
+      payload.assignedLawyer = user?.id;
+    }
 
     try {
       if (editingId) {
@@ -87,6 +104,7 @@ const CasesPage = () => {
       type: legalCase.type || "",
       description: legalCase.description || "",
       status: legalCase.status || "Open",
+      assignedLawyer: legalCase.assignedLawyer?._id || legalCase.assignedLawyer || "",
     });
   };
 
@@ -146,6 +164,19 @@ const CasesPage = () => {
               ))}
             </select>
           </label>
+          {user?.role === "Admin" && (
+            <label>
+              Assigned Lawyer
+              <select name="assignedLawyer" value={form.assignedLawyer || ""} onChange={handleChange} required>
+                <option value="">Select lawyer</option>
+                {lawyers.map((lyr) => (
+                  <option key={lyr._id} value={lyr._id}>
+                    {lyr.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label>
             Title
             <input name="title" value={form.title} onChange={handleChange} required />
@@ -222,9 +253,11 @@ const CasesPage = () => {
                         <button className="text-button" onClick={() => handleEdit(legalCase)}>
                           Edit
                         </button>
-                        <button className="text-button danger" onClick={() => handleDelete(legalCase._id)}>
-                          Delete
-                        </button>
+                        {user?.role === "Admin" && (
+                          <button className="text-button danger" onClick={() => handleDelete(legalCase._id)}>
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))

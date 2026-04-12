@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/client";
+import { useAuth } from "../context/AuthContext";
 
 const emptyForm = {
   caseId: "",
@@ -9,6 +10,7 @@ const emptyForm = {
 };
 
 const HearingsPage = () => {
+  const { user } = useAuth();
   const [hearings, setHearings] = useState([]);
   const [cases, setCases] = useState([]);
   const [form, setForm] = useState(emptyForm);
@@ -42,7 +44,11 @@ const HearingsPage = () => {
         window.alert(
           `Reminder: ${upcoming.caseId?.title || "A case"} has a hearing on ${new Date(
             upcoming.hearingDate
-          ).toLocaleString()}`
+          ).toLocaleString("en-US", {
+            dateStyle: "medium",
+            timeStyle: "short",
+            hour12: true,
+          })}`
         );
       }
     } catch (err) {
@@ -185,15 +191,23 @@ const HearingsPage = () => {
                         <strong>{hearing.caseId?.title}</strong>
                         <div className="muted-cell">{hearing.caseId?.clientId?.name || "No client"}</div>
                       </td>
-                      <td>{new Date(hearing.hearingDate).toLocaleString()}</td>
+                      <td>
+                        {new Date(hearing.hearingDate).toLocaleString("en-US", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                          hour12: true,
+                        })}
+                      </td>
                       <td>{hearing.location || "Not set"}</td>
                       <td className="action-cell">
                         <button className="text-button" onClick={() => handleEdit(hearing)}>
                           Edit
                         </button>
-                        <button className="text-button danger" onClick={() => handleDelete(hearing._id)}>
-                          Delete
-                        </button>
+                        {user?.role === "Admin" && (
+                          <button className="text-button danger" onClick={() => handleDelete(hearing._id)}>
+                            Delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
